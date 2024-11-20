@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Maanya's Love Adventure 💖</title>
     <style>
+        * {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #ff96cc, #ff6b9e);
@@ -14,6 +19,7 @@
             margin: 0;
             color: white;
             overflow: hidden;
+            touch-action: none;
         }
         #game-container {
             background-color: rgba(255, 255, 255, 0.2);
@@ -21,7 +27,7 @@
             padding: 30px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 80%;
+            width: 90%;
             max-width: 500px;
         }
         #player {
@@ -36,6 +42,7 @@
             align-items: center;
             font-weight: bold;
             cursor: pointer;
+            z-index: 10;
         }
         #game-area {
             position: relative;
@@ -44,28 +51,30 @@
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             overflow: hidden;
+            touch-action: none;
         }
         .heart {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             background-color: #ff69b4;
             transform: rotate(45deg);
             cursor: pointer;
+            z-index: 5;
         }
         .heart::before, .heart::after {
             content: "";
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             background-color: #ff69b4;
             border-radius: 50%;
         }
         .heart::before {
-            left: -10px;
+            left: -15px;
         }
         .heart::after {
-            top: -10px;
+            top: -15px;
         }
         #score, #message {
             margin: 10px 0;
@@ -89,9 +98,19 @@
             cursor: pointer;
             margin-top: 10px;
             transition: all 0.3s ease;
+            font-size: 16px;
         }
         button:hover {
             background-color: #ff6b9e;
+        }
+        @media (max-width: 480px) {
+            #game-area {
+                height: 250px;
+            }
+            #game-container {
+                padding: 15px;
+                width: 95%;
+            }
         }
     </style>
 </head>
@@ -104,26 +123,26 @@
         <div id="score">Score: 0</div>
         <div id="message">Catch the hearts!</div>
         <div id="love-message"></div>
-        <button onclick="startGame()">Start Game</button>
+        <button id="start-button">Start Game</button>
     </div>
 
     <script>
-        const player = document.getElementById('player');
         const gameArea = document.getElementById('game-area');
         const scoreElement = document.getElementById('score');
         const messageElement = document.getElementById('message');
         const loveMessageElement = document.getElementById('love-message');
+        const startButton = document.getElementById('start-button');
 
-        let score = 0;
-        let gameActive = false;
-        let playerX = 0, playerY = 0;
+        let player, score = 0, gameActive = false;
 
         const loveMessages = [
-            "Maanya, you have made my every moment so precious in last 11 months! 💖",
-            "11 months of pure joy with you! Happy 11 months my love 💕",
+            "Maanya, you make every moment magical! 💖",
+            "11 months of pure joy with you! 💕",
             "Every day with you feels like a dream! 💓",
             "You're my favorite hello and my hardest goodbye! 💘",
-            "My love for you grows stronger each day! 💗"
+            "My love for you grows stronger each day! 💗",
+            "You're the most beautiful part of my life! 💝",
+            "Our love is my favorite adventure! 💞"
         ];
 
         function startGame() {
@@ -142,8 +161,8 @@
 
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${Math.random() * (gameArea.clientWidth - 20)}px`;
-            heart.style.top = `${Math.random() * (gameArea.clientHeight - 20)}px`;
+            heart.style.left = `${Math.random() * (gameArea.clientWidth - 30)}px`;
+            heart.style.top = `${Math.random() * (gameArea.clientHeight - 30)}px`;
             
             heart.addEventListener('click', () => {
                 score++;
@@ -169,16 +188,46 @@
             loveMessageElement.style.display = 'block';
         }
 
-        gameArea.addEventListener('mousemove', (e) => {
+        // Mobile and desktop input handling
+        function updatePlayerPosition(x, y) {
             if (!gameActive) return;
             
             const rect = gameArea.getBoundingClientRect();
-            const x = e.clientX - rect.left - 25;
-            const y = e.clientY - rect.top - 25;
+            const adjustedX = x - rect.left - 25;
+            const adjustedY = y - rect.top - 25;
             
-            player.style.left = `${x}px`;
-            player.style.top = `${y}px`;
+            player.style.left = `${adjustedX}px`;
+            player.style.top = `${adjustedY}px`;
+        }
+
+        // Mouse move event for desktop
+        gameArea.addEventListener('mousemove', (e) => {
+            updatePlayerPosition(e.clientX, e.clientY);
         });
+
+        // Touch move event for mobile
+        gameArea.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            updatePlayerPosition(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        // Start button event with both mouse and touch support
+        startButton.addEventListener('click', startGame);
+        startButton.addEventListener('touchstart', startGame);
+
+        // Prevent default touch behaviors
+        document.body.addEventListener('touchstart', (e) => {
+            if (e.target === gameArea || e.target.closest('#game-area')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.body.addEventListener('touchmove', (e) => {
+            if (e.target === gameArea || e.target.closest('#game-area')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>

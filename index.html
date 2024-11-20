@@ -3,231 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Maanya's Love Adventure 💖</title>
+    <title>11 Months of Love 💖</title>
     <style>
-        * {
+        * { 
+            box-sizing: border-box;
+            user-select: none;
             touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
         }
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff96cc, #ff6b9e);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            color: white;
-            overflow: hidden;
-            touch-action: none;
-        }
-        #game-container {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
-        }
-        #player {
-            width: 50px;
-            height: 50px;
-            background-color: #ff3366;
-            border-radius: 50%;
-            position: absolute;
-            transition: all 0.3s ease;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b9e, #ff3366);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-        }
-        #game-area {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
             overflow: hidden;
-            touch-action: none;
-        }
-        .heart {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: #ff69b4;
-            transform: rotate(45deg);
-            cursor: pointer;
-            z-index: 5;
-        }
-        .heart::before, .heart::after {
-            content: "";
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: #ff69b4;
-            border-radius: 50%;
-        }
-        .heart::before {
-            left: -15px;
-        }
-        .heart::after {
-            top: -15px;
-        }
-        #score, #message {
-            margin: 10px 0;
-            font-size: 18px;
             color: white;
         }
-        #love-message {
-            display: none;
-            background-color: rgba(255, 255, 255, 0.3);
-            padding: 20px;
+        #gameCanvas {
+            background-color: rgba(255,255,255,0.2);
             border-radius: 15px;
-            margin-top: 20px;
-            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        button {
+        #startScreen {
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+        }
+        #startButton {
             background-color: #ff3366;
             border: none;
             color: white;
             padding: 10px 20px;
             border-radius: 25px;
             cursor: pointer;
-            margin-top: 10px;
+            font-size: 18px;
             transition: all 0.3s ease;
-            font-size: 16px;
         }
-        button:hover {
+        #startButton:hover {
             background-color: #ff6b9e;
-        }
-        @media (max-width: 480px) {
-            #game-area {
-                height: 250px;
-            }
-            #game-container {
-                padding: 15px;
-                width: 95%;
-            }
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <h1>💕 Maanya's Love Adventure 💕</h1>
-        <div id="game-area">
-            <div id="player">🚀</div>
-        </div>
-        <div id="score">Score: 0</div>
-        <div id="message">Catch the hearts!</div>
-        <div id="love-message"></div>
-        <button id="start-button">Start Game</button>
+    <div id="startScreen">
+        <h1>💕 11 Months of Magic 💕</h1>
+        <p>Catch the Love Memories!</p>
+        <canvas id="gameCanvas" width="300" height="500"></canvas>
+        <button id="startButton">Start Our Journey</button>
     </div>
 
     <script>
-        const gameArea = document.getElementById('game-area');
-        const scoreElement = document.getElementById('score');
-        const messageElement = document.getElementById('message');
-        const loveMessageElement = document.getElementById('love-message');
-        const startButton = document.getElementById('start-button');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
 
-        let player, score = 0, gameActive = false;
+        class Game {
+            constructor() {
+                this.memories = [];
+                this.player = {
+                    x: canvas.width / 2,
+                    y: canvas.height - 50,
+                    width: 50,
+                    height: 50,
+                    color: '#ff3366',
+                    speed: 5
+                };
+                this.score = 0;
+                this.gameOver = false;
+                this.specialMessages = [
+                    "First date night 💑",
+                    "Our first laugh together 😂",
+                    "Weekend trip memory 🚗",
+                    "Surprise gift moment 🎁",
+                    "First movie together 🍿",
+                    "Romantic walk 🌹",
+                    "Late-night talks 💖"
+                ];
+            }
 
-        const loveMessages = [
-            "Maanya, you make every moment magical! 💖",
-            "11 months of pure joy with you! 💕",
-            "Every day with you feels like a dream! 💓",
-            "You're my favorite hello and my hardest goodbye! 💘",
-            "My love for you grows stronger each day! 💗",
-            "You're the most beautiful part of my life! 💝",
-            "Our love is my favorite adventure! 💞"
-        ];
+            drawPlayer() {
+                ctx.fillStyle = this.player.color;
+                ctx.fillRect(
+                    this.player.x - this.player.width / 2, 
+                    this.player.y, 
+                    this.player.width, 
+                    this.player.height
+                );
+                ctx.fillStyle = 'white';
+                ctx.font = '20px Arial';
+                ctx.fillText('❤️', this.player.x, this.player.y + 30);
+            }
+
+            spawnMemory() {
+                const memoryTypes = [
+                    { color: '#ff6b9e', points: 10 },
+                    { color: '#ff3366', points: 20 }
+                ];
+                const type = memoryTypes[Math.floor(Math.random() * memoryTypes.length)];
+                
+                const memory = {
+                    x: Math.random() * (canvas.width - 30),
+                    y: -30,
+                    width: 30,
+                    height: 30,
+                    color: type.color,
+                    points: type.points,
+                    message: this.specialMessages[Math.floor(Math.random() * this.specialMessages.length)]
+                };
+                this.memories.push(memory);
+            }
+
+            updateMemories() {
+                this.memories.forEach((memory, index) => {
+                    memory.y += 3;
+
+                    // Check collision
+                    if (
+                        memory.y + memory.height > this.player.y &&
+                        memory.x < this.player.x + this.player.width / 2 &&
+                        memory.x + memory.width > this.player.x - this.player.width / 2
+                    ) {
+                        this.score += memory.points;
+                        this.memories.splice(index, 1);
+                    }
+
+                    // Remove if out of screen
+                    if (memory.y > canvas.height) {
+                        this.memories.splice(index, 1);
+                    }
+                });
+            }
+
+            movePlayer(direction) {
+                if (direction === 'left' && this.player.x > 0) {
+                    this.player.x -= this.player.speed;
+                }
+                if (direction === 'right' && this.player.x < canvas.width) {
+                    this.player.x += this.player.speed;
+                }
+            }
+
+            draw() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background
+                ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw score
+                ctx.fillStyle = 'white';
+                ctx.font = '20px Arial';
+                ctx.fillText(`Score: ${this.score}`, 10, 30);
+
+                // Draw player
+                this.drawPlayer();
+
+                // Draw memories
+                this.memories.forEach(memory => {
+                    ctx.fillStyle = memory.color;
+                    ctx.fillRect(memory.x, memory.y, memory.width, memory.height);
+                });
+            }
+        }
+
+        let game;
+        let gameLoop;
 
         function startGame() {
-            score = 0;
-            gameActive = true;
-            scoreElement.textContent = `Score: ${score}`;
-            messageElement.textContent = "Catch the hearts!";
-            loveMessageElement.style.display = 'none';
-            gameArea.innerHTML = `<div id="player">🚀</div>`;
-            player = document.getElementById('player');
-            createHearts();
-        }
-
-        function createHearts() {
-            if (!gameActive) return;
-
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = `${Math.random() * (gameArea.clientWidth - 30)}px`;
-            heart.style.top = `${Math.random() * (gameArea.clientHeight - 30)}px`;
+            game = new Game();
             
-            heart.addEventListener('click', () => {
-                score++;
-                scoreElement.textContent = `Score: ${score}`;
-                gameArea.removeChild(heart);
-                
-                if (score === 5) {
-                    endGame();
-                } else {
-                    createHearts();
-                }
+            // Hide start screen
+            document.getElementById('startScreen').style.display = 'none';
+
+            // Set canvas to full screen
+            canvas.width = window.innerWidth * 0.9;
+            canvas.height = window.innerHeight * 0.7;
+
+            // Mobile touch controls
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                game.player.x = touch.clientX - rect.left;
+            }, { passive: false });
+
+            // Keyboard controls for desktop
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') game.movePlayer('left');
+                if (e.key === 'ArrowRight') game.movePlayer('right');
             });
 
-            gameArea.appendChild(heart);
+            // Game loop
+            gameLoop = setInterval(() => {
+                // Spawn memories
+                if (Math.random() < 0.05) {
+                    game.spawnMemory();
+                }
+
+                game.updateMemories();
+                game.draw();
+
+                // Game difficulty
+                if (game.score >= 200) {
+                    clearInterval(gameLoop);
+                    showEndScreen();
+                }
+            }, 1000 / 60);
         }
 
-        function endGame() {
-            gameActive = false;
-            messageElement.textContent = "Congratulations!";
-            
-            const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
-            loveMessageElement.textContent = randomMessage;
-            loveMessageElement.style.display = 'block';
+        function showEndScreen() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Love Score: ${game.score}`, canvas.width/2, canvas.height/2 - 50);
+            ctx.fillText('11 Months of Magical Memories! 💖', canvas.width/2, canvas.height/2);
         }
 
-        // Mobile and desktop input handling
-        function updatePlayerPosition(x, y) {
-            if (!gameActive) return;
-            
-            const rect = gameArea.getBoundingClientRect();
-            const adjustedX = x - rect.left - 25;
-            const adjustedY = y - rect.top - 25;
-            
-            player.style.left = `${adjustedX}px`;
-            player.style.top = `${adjustedY}px`;
-        }
-
-        // Mouse move event for desktop
-        gameArea.addEventListener('mousemove', (e) => {
-            updatePlayerPosition(e.clientX, e.clientY);
-        });
-
-        // Touch move event for mobile
-        gameArea.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            updatePlayerPosition(touch.clientX, touch.clientY);
-        }, { passive: false });
-
-        // Start button event with both mouse and touch support
+        // Start game event
         startButton.addEventListener('click', startGame);
         startButton.addEventListener('touchstart', startGame);
-
-        // Prevent default touch behaviors
-        document.body.addEventListener('touchstart', (e) => {
-            if (e.target === gameArea || e.target.closest('#game-area')) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        document.body.addEventListener('touchmove', (e) => {
-            if (e.target === gameArea || e.target.closest('#game-area')) {
-                e.preventDefault();
-            }
-        }, { passive: false });
     </script>
 </body>
 </html>

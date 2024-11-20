@@ -4,20 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>11 Months of Love 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100dvh;
             margin: 0;
-            background: linear-gradient(135deg, #f0f4f8, #e0e8f0);
-            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #FFE4E1, #FFC0CB);
+            font-family: 'Poppins', sans-serif;
+            overscroll-behavior: contain;
         }
         #card {
-            width: 300px;
-            height: 400px;
-            perspective: 1000px;
+            width: 350px;
+            height: 500px;
+            perspective: 1500px;
             cursor: pointer;
         }
         #card-inner {
@@ -35,14 +41,18 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(255,105,180,0.2);
+            overflow: hidden;
         }
         #front {
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f0f5fa);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            padding: 20px;
         }
         #back {
             background: linear-gradient(135deg, #ff6b9e, #ff3366);
@@ -52,12 +62,21 @@
             justify-content: center;
             align-items: center;
             color: white;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
+        }
+        #personalized-text {
+            font-family: 'Dancing Script', cursive;
+            color: #ff1493;
+            font-size: 24px;
+            margin-top: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         #love-message {
             font-size: 18px;
             margin-top: 20px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -66,14 +85,17 @@
         <div id="card-inner">
             <div id="front" class="card-side">
                 <!-- Snoopy SVG will be dynamically inserted here -->
+                <div id="personalized-text">
+                    For My Maanya, My Joe Cool 💖
+                </div>
             </div>
             <div id="back" class="card-side">
                 <h2>11 Months of Love 💕</h2>
                 <div id="love-message">
-                    Maanya, these 11 months have been 
-                    the most beautiful journey of my life. 
-                    Every moment with you is a treasure 
-                    I'll forever cherish. 
+                    Maanya, every moment in these last 11 months with you 
+                    is like Snoopy's most magical 
+                    adventure. You're my Joe Cool, 
+                    my heart's true companion. 
                     Love always, Shreyansh 💖
                 </div>
             </div>
@@ -81,46 +103,49 @@
     </div>
 
     <script>
-        // Snoopy SVG with detailed rendering
         const snoopySVG = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400">
-            <!-- Background -->
-            <rect width="100%" height="100%" fill="#f0f4f8"/>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="250" height="250">
+            <defs>
+                <linearGradient id="loveBG" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ffe6f2;stop-opacity:0.5"/>
+                    <stop offset="100%" style="stop-color:#ffd1e6;stop-opacity:0.3"/>
+                </linearGradient>
+                <filter id="softShadow">
+                    <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#ff69b4" flood-opacity="0.3"/>
+                </filter>
+            </defs>
             
-            <!-- Snoopy's Body -->
+            <!-- Joe Cool Snoopy Pose -->
             <path d="M150 200 
                      Q120 230, 100 260 
                      Q80 290, 120 310 
                      Q160 330, 180 300 
                      Q200 270, 180 240 
                      Q160 210, 150 200Z" 
-                  fill="#ffffff" stroke="#000" stroke-width="3"/>
+                  fill="#ffffff" 
+                  stroke="#ff69b4" 
+                  stroke-width="3" 
+                  filter="url(#softShadow)"/>
             
-            <!-- Head Shape -->
+            <!-- Cool Pose Head -->
             <ellipse cx="150" cy="120" rx="80" ry="70" 
-                     fill="#ffffff" stroke="#000" stroke-width="3"/>
+                     fill="#ffffff" stroke="#ff1493" stroke-width="3"/>
             
-            <!-- Ears -->
-            <path d="M80 50 Q60 40, 70 30 Q80 20, 90 30" 
-                  fill="#ffffff" stroke="#000" stroke-width="3"/>
-            <path d="M220 50 Q240 40, 230 30 Q220 20, 210 30" 
-                  fill="#ffffff" stroke="#000" stroke-width="3"/>
+            <!-- Cool Sunglasses -->
+            <path d="M100 100 L120 100 Q130 90, 140 100 
+                     M180 100 L200 100 Q210 90, 220 100" 
+                  fill="none" stroke="#000" stroke-width="4"/>
+            <rect x="110" y="100" width="30" height="10" fill="#000" rx="5"/>
+            <rect x="160" y="100" width="30" height="10" fill="#000" rx="5"/>
             
-            <!-- Eyes -->
-            <circle cx="120" cy="110" r="10" fill="#000"/>
-            <circle cx="180" cy="110" r="10" fill="#000"/>
-            
-            <!-- Nose -->
-            <path d="M150 140 Q160 150, 150 160 Q140 150, 150 140Z" 
-                  fill="#000"/>
-            
-            <!-- Mouth -->
+            <!-- Relaxed Mouth -->
             <path d="M130 170 Q150 180, 170 170" 
-                  fill="none" stroke="#000" stroke-width="3"/>
+                  fill="none" stroke="#000" stroke-width="3" 
+                  stroke-linecap="round"/>
             
-            <!-- Collar -->
+            <!-- Cool Collar -->
             <path d="M100 180 L200 180 L180 200 L120 200Z" 
-                  fill="#ff3366" stroke="#000" stroke-width="2"/>
+                  fill="#ff3366" stroke="#ff1493" stroke-width="2"/>
             
             <!-- Subtle Heart Background -->
             <path d="M50 50 
@@ -130,19 +155,22 @@
                      Q200 160, 150 120 
                      Q100 160, 50 120 
                      Q0 80, 50 50Z" 
-                  fill="rgba(255,49,102,0.1)"/>
+                  fill="rgba(255,20,147,0.1)"/>
         </svg>`;
 
         const card = document.getElementById('card');
         const front = document.getElementById('front');
 
-        // Insert Snoopy SVG
-        front.innerHTML = snoopySVG;
+        front.innerHTML = snoopySVG + front.innerHTML;
 
-        // Card flip interaction
         card.addEventListener('click', () => {
             card.classList.toggle('flipped');
         });
+
+        // Prevent overscroll on mobile
+        document.body.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
     </script>
 </body>
 </html>

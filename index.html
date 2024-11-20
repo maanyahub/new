@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maanya's Love Adventure 💖</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff96cc, #ff6b9e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            overflow: hidden;
+        }
+        #game-container {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+        #player {
+            width: 50px;
+            height: 50px;
+            background-color: #ff3366;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #game-area {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff69b4;
+            transform: rotate(45deg);
+            cursor: pointer;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff69b4;
+            border-radius: 50%;
+        }
+        .heart::before {
+            left: -10px;
+        }
+        .heart::after {
+            top: -10px;
+        }
+        #score, #message {
+            margin: 10px 0;
+            font-size: 18px;
+            color: white;
+        }
+        #love-message {
+            display: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        button {
+            background-color: #ff3366;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #ff6b9e;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>💕 Maanya's Love Adventure 💕</h1>
+        <div id="game-area">
+            <div id="player">🚀</div>
+        </div>
+        <div id="score">Score: 0</div>
+        <div id="message">Catch the hearts!</div>
+        <div id="love-message"></div>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <script>
+        const player = document.getElementById('player');
+        const gameArea = document.getElementById('game-area');
+        const scoreElement = document.getElementById('score');
+        const messageElement = document.getElementById('message');
+        const loveMessageElement = document.getElementById('love-message');
+
+        let score = 0;
+        let gameActive = false;
+        let playerX = 0, playerY = 0;
+
+        const loveMessages = [
+            "Maanya, you have made my every moment so precious in last 11 months! 💖",
+            "11 months of pure joy with you! Happy 11 months my love 💕",
+            "Every day with you feels like a dream! 💓",
+            "You're my favorite hello and my hardest goodbye! 💘",
+            "My love for you grows stronger each day! 💗"
+        ];
+
+        function startGame() {
+            score = 0;
+            gameActive = true;
+            scoreElement.textContent = `Score: ${score}`;
+            messageElement.textContent = "Catch the hearts!";
+            loveMessageElement.style.display = 'none';
+            gameArea.innerHTML = `<div id="player">🚀</div>`;
+            player = document.getElementById('player');
+            createHearts();
+        }
+
+        function createHearts() {
+            if (!gameActive) return;
+
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${Math.random() * (gameArea.clientWidth - 20)}px`;
+            heart.style.top = `${Math.random() * (gameArea.clientHeight - 20)}px`;
+            
+            heart.addEventListener('click', () => {
+                score++;
+                scoreElement.textContent = `Score: ${score}`;
+                gameArea.removeChild(heart);
+                
+                if (score === 5) {
+                    endGame();
+                } else {
+                    createHearts();
+                }
+            });
+
+            gameArea.appendChild(heart);
+        }
+
+        function endGame() {
+            gameActive = false;
+            messageElement.textContent = "Congratulations!";
+            
+            const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+            loveMessageElement.textContent = randomMessage;
+            loveMessageElement.style.display = 'block';
+        }
+
+        gameArea.addEventListener('mousemove', (e) => {
+            if (!gameActive) return;
+            
+            const rect = gameArea.getBoundingClientRect();
+            const x = e.clientX - rect.left - 25;
+            const y = e.clientY - rect.top - 25;
+            
+            player.style.left = `${x}px`;
+            player.style.top = `${y}px`;
+        });
+    </script>
+</body>
+</html>
